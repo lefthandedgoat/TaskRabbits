@@ -33,25 +33,14 @@ namespace TaskRabbits.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(dynamic @params)
+        public ActionResult Create()
         {
-            @params.Id = tasks.Insert(new
-            {
-                RabbitId = @params.rabbitId,
-                DueDate = @params.DueDate,
-                Description = @params.Description
-            });
-
-            ApplyLinksAndFormatting(@params);
-
-            return new DynamicJsonResult(@params);
+            return new EmptyResult();
         }
 
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            tasks.Delete(id);
-
             return new EmptyResult();
         }
 
