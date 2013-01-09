@@ -14,5 +14,20 @@ namespace TaskRabbits.Controllers
         {
             return View();
         }
+
+        public ActionResult Backbone()
+        {
+            return View();
+        }
+
+        public ActionResult Knockout()
+        {
+            return View();
+        }
+
+        public ActionResult Angular()
+        {
+            return View();
+        }
     }
 }

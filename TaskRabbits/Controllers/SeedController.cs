@@ -18,11 +18,47 @@ namespace Oak.Controllers
     {
         public IEnumerable<Func<dynamic>> Scripts()
         {
-            return null;
+            yield return CreateRabbitsTable;
+
+            yield return CreateTasksTable;
+        }
+
+        public string CreateRabbitsTable()
+        {
+            return Seed.CreateTable("Rabbits",
+                Seed.Id(),
+                new { Name = "nvarchar(255)" }
+            );
+        }
+
+        public string CreateTasksTable()
+        {
+            return Seed.CreateTable("Tasks",
+                Seed.Id(),
+                new { RabbitId = "int", ForeignKey = "Rabbits(Id)" },
+                new { Description = "nvarchar(255)" },
+                new { DueDate = "datetime" }
+            );
         }
 
         public void SampleEntries()
         {
+            var rabbitId = new { Name = "Yours Truly" }.InsertInto("Rabbits");
+
+            new { rabbitId, Description = "bolt onto vans", DueDate = DateTime.Today }.InsertInto("Tasks");
+
+            rabbitId = new { Name = "Hiro Protaganist" }.InsertInto("Rabbits");
+
+            new { rabbitId, Description = "save the world", DueDate = DateTime.Today }.InsertInto("Tasks");
+
+            new { rabbitId, Description = "deliver pizza", DueDate = DateTime.Today }.InsertInto("Tasks");
+
+            rabbitId = new { Name = "Lots" }.InsertInto("Rabbits");
+
+            for (int i = 0; i < 1000; i++)
+            {
+                new { rabbitId, Description = "Task: " + i.ToString(), DueDate = DateTime.Today }.InsertInto("Tasks");
+            }
         }
 
         public Seed Seed { get; set; }
