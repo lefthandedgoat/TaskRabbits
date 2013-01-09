@@ -25,9 +25,9 @@ namespace TaskRabbits.Controllers
                 }
             };
 
-            return Json(new 
+            return Json(new
             {
-                Tasks = tasks, 
+                Tasks = tasks,
                 CreateTaskUrl = "/Tasks/Create?rabbitId=1"
             }, JsonRequestBehavior.AllowGet);
         }
@@ -58,6 +58,56 @@ namespace TaskRabbits.Controllers
                 SaveUrl = "/Tasks/Update/2",
                 DeleteUrl = "/Tasks/Delete/2"
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult All()
+        {
+            var all = new[] 
+            {
+                new 
+                { 
+                    Id = 1, 
+                    RabbitId = 1, Description = "Test", DueDate = "1/1/2013", 
+                    Rabbit = new 
+                    { 
+                        Id = 1,
+                        Name = "Test"
+                    }
+                },
+                new 
+                { 
+                    Id = 2, 
+                    RabbitId = 1, Description = "Test", DueDate = "1/1/2013", 
+                    Rabbit = new 
+                    { 
+                        Id = 1,
+                        Name = "Test"
+                    }
+                },
+                new 
+                { 
+                    Id = 3, 
+                    RabbitId = 2, Description = "Test", DueDate = "1/1/2013", 
+                    Rabbit = new 
+                    { 
+                        Id = 2,
+                        Name = "Test 2"
+                    }
+                },
+                new 
+                { 
+                    Id = 4, 
+                    RabbitId = 2, Description = "Test", DueDate = "1/1/2013", 
+                    Rabbit = new 
+                    { 
+                        Id = 2,
+                        Name = "Test 2"
+                    }
+                }
+            };
+
+            return Json(new { Tasks = all }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
