@@ -69,41 +69,25 @@ namespace TaskRabbits.Controllers
                 { 
                     Id = 1, 
                     RabbitId = 1, Description = "Test", DueDate = "1/1/2013", 
-                    Rabbit = new 
-                    { 
-                        Id = 1,
-                        Name = "Test"
-                    }
+                    RabbitName = "Test"
                 },
                 new 
                 { 
                     Id = 2, 
                     RabbitId = 1, Description = "Test", DueDate = "1/1/2013", 
-                    Rabbit = new 
-                    { 
-                        Id = 1,
-                        Name = "Test"
-                    }
+                    RabbitName = "Test"
                 },
                 new 
                 { 
                     Id = 3, 
                     RabbitId = 2, Description = "Test", DueDate = "1/1/2013", 
-                    Rabbit = new 
-                    { 
-                        Id = 2,
-                        Name = "Test 2"
-                    }
+                    RabbitName = "Test 2"
                 },
                 new 
                 { 
                     Id = 4, 
                     RabbitId = 2, Description = "Test", DueDate = "1/1/2013", 
-                    Rabbit = new 
-                    { 
-                        Id = 2,
-                        Name = "Test 2"
-                    }
+                    RabbitName = "Test 2"
                 }
             };
 
