@@ -18,12 +18,22 @@ namespace Oak.Controllers
     {
         public IEnumerable<Func<dynamic>> Scripts()
         {
-            return null;
+            yield return CreateRabbitsTable;
+        }
+
+        public string CreateRabbitsTable()
+        {
+            return Seed.CreateTable("Rabbits", 
+                Seed.Id(), 
+                new { Name = "varchar(15)" }
+            );
         }
 
         public void SampleEntries()
         {
+            new { Name = "Test" }.InsertInto("Rabbits");
 
+            new { Name = "Yours Truly" }.InsertInto("Rabbits");
         }
 
         public Seed Seed { get; set; }

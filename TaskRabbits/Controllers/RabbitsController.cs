@@ -4,26 +4,31 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Oak;
+using TaskRabbits.Repositories;
 
 namespace TaskRabbits.Controllers
 {
     public class RabbitsController : Controller
     {
+        Rabbits rabbits = new Rabbits();
+
         [HttpGet]
         public ActionResult Index()
         {
-            var rabbits = new[] 
-            {
-                new { Id = 1, Name = "Test", TasksUrl = "/Tasks?rabbitId=1" },
-                new { Id = 2, Name = "Test 2", TasksUrl = "/Tasks?rabbitId=2" }
-            };
+            var results = rabbits.All();
 
-            return Json(new
+            results.ForEach(s => s.TasksUrl = Url.RouteUrl(new 
+            { 
+                controller = "Tasks",
+                action = "Index",
+                rabbitId = s.Id
+            }));
+
+            return new DynamicJsonResult(new
             {
-                Rabbits = rabbits,
+                Rabbits = results,
                 CreateRabbitUrl = Url.RouteUrl(new { controller = "Rabbits", action = "Create" })
-            }, 
-            JsonRequestBehavior.AllowGet);
+            });
         }
 
         [HttpPost]
