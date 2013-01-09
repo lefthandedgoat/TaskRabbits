@@ -11,55 +11,60 @@ namespace TaskRabbits.Controllers
 {
     public class TasksController : Controller
     {
-        dynamic tasks = new Tasks();
-
         public ActionResult Index(int rabbitId)
         {
-            IEnumerable<dynamic> results = tasks.ForRabbit(rabbitId);
+            var tasks = new[] 
+            {
+                new 
+                {
+                    Id = 1,
+                    RabbitId = 1,
+                    Description = "Test",
+                    DueDate = "1/1/2013",
+                    SaveUrl = "/Tasks/Update/1",
+                    DeleteUrl = "/Tasks/Delete/1"
+                }
+            };
 
-            results.ForEach(ApplyLinksAndFormatting);
-
-            return new DynamicJsonResult(new 
-            { 
-                Tasks = results, 
-                CreateTaskUrl = Link("Tasks", "Create", new { rabbitId })
-            });
+            return Json(new 
+            {
+                Tasks = tasks, 
+                CreateTaskUrl = "/Tasks/Create?rabbitId=1"
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Update()
         {
-            return new EmptyResult();
+            return Json(new
+            {
+                Id = 1,
+                RabbitId = 1,
+                Description = "Test",
+                DueDate = "1/1/2013",
+                SaveUrl = "/Tasks/Update/1",
+                DeleteUrl = "/Tasks/Delete/1"
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Create()
         {
-            return new EmptyResult();
+            return Json(new
+            {
+                Id = 2,
+                RabbitId = 1,
+                Description = "Test",
+                DueDate = "1/1/2013",
+                SaveUrl = "/Tasks/Update/2",
+                DeleteUrl = "/Tasks/Delete/2"
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Delete(int id)
         {
             return new EmptyResult();
-        }
-
-        void ApplyLinksAndFormatting(dynamic task)
-        {
-            task.SaveUrl = Link("Tasks", "Update", new { task.Id });
-            task.DeleteUrl = Link("Tasks", "Delete", new { task.Id });
-
-            if (!(task.DueDate is string)) task.DueDate = task.DueDate.ToShortDateString();
-        }
-
-        public string Link(string controller, string action, object args)
-        {
-            var routes = new RouteValueDictionary(args);
-
-            routes.Add("controller", controller);
-            routes.Add("action", action);
-
-            return Url.RouteUrl(routes);
         }
     }
 }
