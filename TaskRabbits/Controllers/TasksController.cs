@@ -27,13 +27,9 @@ namespace TaskRabbits.Controllers
         }
 
         [HttpPost]
-        public ActionResult Update(dynamic @params)
+        public ActionResult Update()
         {
-            var task = tasks.Single(@params.Id);
-            task.UpdateMembers(@params);
-            tasks.Save(task);
-            ApplyLinksAndFormatting(task);
-            return new DynamicJsonResult(task);
+            return new EmptyResult();
         }
 
         [HttpPost]
