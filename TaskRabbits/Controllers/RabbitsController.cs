@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Oak;
 using TaskRabbits.Repositories;
+using TaskRabbits.Models;
 
 namespace TaskRabbits.Controllers
 {
@@ -17,12 +18,7 @@ namespace TaskRabbits.Controllers
         {
             var results = rabbits.All();
 
-            results.ForEach(s => s.TasksUrl = Url.RouteUrl(new 
-            { 
-                controller = "Tasks",
-                action = "Index",
-                rabbitId = s.Id
-            }));
+            results.ForEach(AttachLinks);
 
             return new DynamicJsonResult(new
             {
@@ -32,31 +28,34 @@ namespace TaskRabbits.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create()
+        public ActionResult Create(dynamic @params)
         {
-            if (true /*isvalid*/)
+            dynamic rabbit = new Rabbit(@params);
+
+            if (rabbit.IsValid())
             {
-                return Json(new
-                {
-                    Id = 3,
-                    Name = "Test 3",
-                    TasksUrl = "/Tasks?rabbitId=3"
-                },
-                JsonRequestBehavior.AllowGet);
+                rabbit.Save();
+                AttachLinks(rabbit);
+                return new DynamicJsonResult(@params);
             }
             else
             {
-                var errorPayload = new
-                {
-                    Errors = new[] 
-                    {
-                        new { Key = "Name", Value = "Name is required." },
-                        new { Key = "Name", Value = "Name must be unique." }
-                    }
-                };
+                var errors = rabbit.Errors() as IEnumerable<dynamic>;
 
-                return Json(errorPayload, JsonRequestBehavior.AllowGet);
+                var payload = errors.Select(s => new { Key = s.Key, Value = s.Value });
+
+                return new DynamicJsonResult(new { Errors = payload });
             }
+        }
+
+        void AttachLinks(dynamic rabbit)
+        {
+            rabbit.TasksUrl = Url.RouteUrl(new 
+            { 
+                controller = "Tasks",
+                action = "Index",
+                rabbitId = rabbit.Id
+            });
         }
     }
 }
