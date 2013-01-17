@@ -40,11 +40,7 @@ namespace TaskRabbits.Controllers
             }
             else
             {
-                var errors = rabbit.Errors() as IEnumerable<dynamic>;
-
-                var payload = errors.Select(s => new { Key = s.Key, Value = s.Value });
-
-                return new DynamicJsonResult(new { Errors = payload });
+                return new DynamicJsonResult(new { Errors = rabbit.Errors() });
             }
         }
 
