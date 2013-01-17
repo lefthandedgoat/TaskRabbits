@@ -3,24 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Oak;
+using Highway.Data.Interfaces;
+using Highway.Data.QueryObjects;
+using TaskRabbits.DataAccess;
+using TaskRabbits.Models;
 
 namespace TaskRabbits.Controllers
 {
     public class RabbitsController : Controller
     {
+        private readonly IRepository _repo;
+
+        public RabbitsController(IRepository repo)
+        {
+            _repo = repo;
+        }
+
         [HttpGet]
         public ActionResult Index()
         {
-            var rabbits = new[] 
-            {
-                new { Id = 1, Name = "Test", TasksUrl = "/Tasks?rabbitId=1" },
-                new { Id = 2, Name = "Test 2", TasksUrl = "/Tasks?rabbitId=2" }
-            };
+            var rabbits = _repo.Find(new AllRabbits());
+
+            var viewModels = rabbits.Select(x => new RabbitViewModel(x, Url));
 
             return Json(new
             {
-                Rabbits = rabbits,
+                Rabbits = viewModels,
                 CreateRabbitUrl = Url.RouteUrl(new { controller = "Rabbits", action = "Create" })
             }, 
             JsonRequestBehavior.AllowGet);

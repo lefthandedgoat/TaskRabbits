@@ -1,0 +1,919 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Highway.Data.EntityFramework</name>
+    </assembly>
+    <members>
+        <member name="T:Highway.Data.EntityFramework.Builder.DynamicAggregateContextTypeBuilder">
+            <summary>
+            Dynamicly creates subclasses and then stores that type by the configured aggregate root types for future instantiation.
+            </summary>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.Builder.DynamicAggregateContextTypeBuilder.Build(Highway.Data.IAggregateConfiguration)">
+            <summary>
+            Builds the type for the Context
+            </summary>
+            <param name="configuration">the aggregate configuration used to build the context</param>
+            <returns>the IDataContext</returns>
+        </member>
+        <member name="T:Highway.Data.AggregateConfiguration">
+            <summary>
+            Base implementation of an Aggregate Root Bounded Context Configuration
+            </summary>
+        </member>
+        <member name="T:Highway.Data.IAggregateConfiguration">
+            <summary>
+            Configuration of an aggregate root context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.IAggregateConfiguration.TypesConfigured">
+            <summary>
+            List of the types in the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.IAggregateConfiguration.ConnectionString">
+            <summary>
+            Connection String for the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.IAggregateConfiguration.Mappings">
+            <summary>
+            Mapping Configurations for the types in the bounded Context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.IAggregateConfiguration.Logger">
+            <summary>
+            Logged to be used by the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.IAggregateConfiguration.ContextConfiguration">
+            <summary>
+            Context level configuration for the bounded context
+            </summary>
+        </member>
+        <member name="M:Highway.Data.AggregateConfiguration.#ctor(System.String,Highway.Data.IMappingConfiguration[],Common.Logging.ILog,Highway.Data.IContextConfiguration,System.Type[])">
+            <summary>
+            
+            </summary>
+            <param name="connectionString"></param>
+            <param name="mappings"></param>
+            <param name="logger"></param>
+            <param name="contextConfiguration"></param>
+            <param name="typesConfigured"></param>
+        </member>
+        <member name="P:Highway.Data.AggregateConfiguration.TypesConfigured">
+            <summary>
+            List of the types in the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.AggregateConfiguration.ConnectionString">
+            <summary>
+            Connection String for the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.AggregateConfiguration.Mappings">
+            <summary>
+            Mapping Configurations for the types in the bounded Context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.AggregateConfiguration.Logger">
+            <summary>
+            Logged to be used by the bounded context
+            </summary>
+        </member>
+        <member name="P:Highway.Data.AggregateConfiguration.ContextConfiguration">
+            <summary>
+            Context level configuration for the bounded context
+            </summary>
+        </member>
+        <member name="T:Highway.Data.DefaultContextConfiguration">
+            <summary>
+            Default Settings of Lazy loading and proxy generation off.
+            </summary>
+        </member>
+        <member name="T:Highway.Data.IContextConfiguration">
+            <summary>
+            Implement this interface to pass the context specific mapping to the constructor
+            </summary>
+        </member>
+        <member name="M:Highway.Data.IContextConfiguration.ConfigureContext(System.Data.Entity.DbContext)">
+            <summary>
+            This method allows the configuration of context specific properties to be injected
+            </summary>
+            <param name="context">the context that is being configured</param>
+        </member>
+        <member name="T:Highway.Data.AggregateDataContext">
+            <summary>
+            Context that is bounded to an Aggregate Root(s) for query separation
+            </summary>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.#ctor(Highway.Data.IAggregateConfiguration)">
+            <summary>
+            Constructs the base AggregateRootContext - This should not be used
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.AsQueryable``1">
+            <summary>
+            This gives a mock-able wrapper around the normal <see cref="T:System.Data.Entity.DbSet`1"/> method that allows for testablity
+            </summary>
+            <typeparam name="T">The Entity being queried</typeparam>
+            <returns><see cref="T:System.Linq.IQueryable`1"/></returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Add``1(``0)">
+            <summary>
+            Adds the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being added</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to add</param>
+            <returns>The <typeparamref name="T"/> you added</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Remove``1(``0)">
+            <summary>
+            Removes the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being removed</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to remove</param>
+            <returns>The <typeparamref name="T"/> you removed</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Update``1(``0)">
+            <summary>
+            Updates the provided instance of <typeparamref name="T"/> in the data context
+            </summary>
+            <typeparam name="T">The Entity Type being updated</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to update</param>
+            <returns>The <typeparamref name="T"/> you updated</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Attach``1(``0)">
+            <summary>
+            Attaches the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being attached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to attach</param>
+            <returns>The <typeparamref name="T"/> you attached</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Detach``1(``0)">
+            <summary>
+            Detaches the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being detached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to detach</param>
+            <returns>The <typeparamref name="T"/> you detached</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Reload``1(``0)">
+            <summary>
+            Reloads the provided instance of <typeparamref name="T"/> from the database
+            </summary>
+            <typeparam name="T">The Entity Type being reloaded</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to reload</param>
+            <returns>The <typeparamref name="T"/> you reloaded</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.Commit">
+            <summary>
+            Commits all currently tracked entity changes
+            </summary>
+            <returns>the number of rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.ExecuteSqlQuery``1(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and tries to map the returned datasets into an <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            The results should have the same column names as the Entity Type has properties
+            </summary>
+            <typeparam name="T">The Entity Type that the return should be mapped to</typeparam>
+            <param name="sql">The SQL Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> from the query return</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.ExecuteSqlCommand(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and returns the standard integer return from the query
+            </summary>
+            <param name="sql">The SQL Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>The rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.ExecuteFunction(System.String,System.Data.Objects.ObjectParameter[])">
+            <summary>
+            
+            </summary>
+            <param name="procedureName"></param>
+            <param name="dbParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highway.Data.AggregateDataContext.OnModelCreating(System.Data.Entity.DbModelBuilder)">
+            <summary>
+            This method is called when the model for a derived context has been initialized, but
+                            before the model has been locked down and used to initialize the context.  The default
+                            implementation of this method takes the <see cref="T:Highway.Data.IMappingConfiguration"/> array passed in on construction and applies them. 
+            If no configuration mappings were passed in it does nothing.
+            </summary>
+            <remarks>
+            Typically, this method is called only once when the first instance of a derived context
+                            is created.  The model for that context is then cached and is for all further instances of
+                            the context in the application domain.  This caching can be disabled by setting the ModelCaching
+                            property on the given ModelBuidler, but note that this can seriously degrade performance.
+                            More control over caching is provided through use of the DbModelBuilder and DbContextFactory
+                            classes directly.
+            </remarks>
+            <param name="modelBuilder">The builder that defines the model for the context being created.</param>
+        </member>
+        <member name="P:Highway.Data.AggregateDataContext.EventManager">
+            <summary>
+            The reference to EventManager that allows for ordered event handling and registration
+            </summary>
+        </member>
+        <member name="E:Highway.Data.AggregateDataContext.PreSave">
+            <summary>
+            The event fired just before the commit of the ORM
+            </summary>
+        </member>
+        <member name="E:Highway.Data.AggregateDataContext.PostSave">
+            <summary>
+            The event fired just after the commit of the ORM
+            </summary>
+        </member>
+        <member name="T:Highway.Data.DataContext">
+            <summary>
+            A base implementation of the Code First Data DataContext for Entity Framework
+            </summary>
+        </member>
+        <member name="T:Highway.Data.EntityFramework.Interfaces.IEntityDataContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.Interfaces.IEntityDataContext.ExecuteSqlQuery``1(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and tries to map the returned datasets into an <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            The results should have the same column names as the Entity Type has properties
+            </summary>
+            <typeparam name="T">The Entity Type that the return should be mapped to</typeparam>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> from the query return</returns>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.Interfaces.IEntityDataContext.ExecuteSqlCommand(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and returns the standard int return from the query
+            </summary>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>The rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.Interfaces.IEntityDataContext.Attach``1(``0)">
+            <summary>
+            Attaches the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being attached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to attach</param>
+            <returns>The <typeparamref name="T"/> you attached</returns>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.Interfaces.IEntityDataContext.Detach``1(``0)">
+            <summary>
+            Detaches the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being detached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to detach</param>
+            <returns>The <typeparamref name="T"/> you detached</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.#ctor(System.String,Highway.Data.IMappingConfiguration)">
+            <summary>
+            Constructs a context
+            </summary>
+            <param name="connectionString">The standard SQL connection string for the Database</param>
+            <param name="mapping">The Mapping Configuration that will determine how the tables and objects interact</param>
+        </member>
+        <member name="M:Highway.Data.DataContext.#ctor(System.String,Highway.Data.IMappingConfiguration,Common.Logging.ILog)">
+            <summary>
+            Constructs a context
+            </summary>
+            <param name="connectionString">The standard SQL connection string for the Database</param>
+            <param name="mapping">The Mapping Configuration that will determine how the tables and objects interact</param>
+            <param name="log">The logger being supplied for this context ( Optional )</param>
+        </member>
+        <member name="M:Highway.Data.DataContext.#ctor(System.String,Highway.Data.IMappingConfiguration,Highway.Data.IContextConfiguration)">
+            <summary>
+            Constructs a context
+            </summary>
+            <param name="connectionString">The standard SQL connection string for the Database</param>
+            <param name="mapping">The Mapping Configuration that will determine how the tables and objects interact</param>
+            <param name="contextConfiguration">The context specific configuration that will change context level behavior ( Optional )</param>
+        </member>
+        <member name="M:Highway.Data.DataContext.#ctor(System.String,Highway.Data.IMappingConfiguration,Highway.Data.IContextConfiguration,Common.Logging.ILog)">
+            <summary>
+            Constructs a context
+            </summary>
+            <param name="connectionString">The standard SQL connection string for the Database</param>
+            <param name="mapping">The Mapping Configuration that will determine how the tables and objects interact</param>
+            <param name="contextConfiguration">The context specific configuration that will change context level behavior</param>
+            <param name="log">The logger being supplied for this context ( Optional )</param>
+        </member>
+        <member name="M:Highway.Data.DataContext.AsQueryable``1">
+            <summary>
+            This gives a mockable wrapper around the normal <see cref="T:System.Data.Entity.DbSet`1"/> method that allows for testablity
+            </summary>
+            <typeparam name="T">The Entity being queried</typeparam>
+            <returns><see cref="T:System.Linq.IQueryable`1"/></returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Add``1(``0)">
+            <summary>
+            Adds the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being added</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to add</param>
+            <returns>The <typeparamref name="T"/> you added</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Remove``1(``0)">
+            <summary>
+            Removes the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being removed</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to remove</param>
+            <returns>The <typeparamref name="T"/> you removed</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Update``1(``0)">
+            <summary>
+            Updates the provided instance of <typeparamref name="T"/> in the data context
+            </summary>
+            <typeparam name="T">The Entity Type being updated</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to update</param>
+            <returns>The <typeparamref name="T"/> you updated</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Attach``1(``0)">
+            <summary>
+            Attaches the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being attached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to attach</param>
+            <returns>The <typeparamref name="T"/> you attached</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Detach``1(``0)">
+            <summary>
+            Detaches the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being detached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to detach</param>
+            <returns>The <typeparamref name="T"/> you detached</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Reload``1(``0)">
+            <summary>
+            Reloads the provided instance of <typeparamref name="T"/> from the database
+            </summary>
+            <typeparam name="T">The Entity Type being reloaded</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to reload</param>
+            <returns>The <typeparamref name="T"/> you reloaded</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.Commit">
+            <summary>
+            Commits all currently tracked entity changes
+            </summary>
+            <returns>the number of rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.ExecuteSqlQuery``1(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and tries to map the returned datasets into an <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            The results should have the same column names as the Entity Type has properties
+            </summary>
+            <typeparam name="T">The Entity Type that the return should be mapped to</typeparam>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> from the query return</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.ExecuteSqlCommand(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and returns the standard int return from the query
+            </summary>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>The rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.ExecuteFunction(System.String,System.Data.Objects.ObjectParameter[])">
+            <summary>
+            
+            </summary>
+            <param name="procedureName"></param>
+            <param name="dbParams"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Highway.Data.DataContext.OnModelCreating(System.Data.Entity.DbModelBuilder)">
+            <summary>
+            This method is called when the model for a derived context has been initialized, but
+                            before the model has been locked down and used to initialize the context.  The default
+                            implementation of this method takes the <see cref="T:Highway.Data.IMappingConfiguration"/> array passed in on construction and applies them. 
+            If no configuration mappings were passed it it does nothing.
+            </summary>
+            <remarks>
+            Typically, this method is called only once when the first instance of a derived context
+                            is created.  The model for that context is then cached and is for all further instances of
+                            the context in the app domain.  This caching can be disabled by setting the ModelCaching
+                            property on the given ModelBuidler, but note that this can seriously degrade performance.
+                            More control over caching is provided through use of the DbModelBuilder and DbContextFactory
+                            classes directly.
+            </remarks>
+            <param name="modelBuilder">The builder that defines the model for the context being created.</param>
+        </member>
+        <member name="P:Highway.Data.DataContext.EventManager">
+            <summary>
+            The reference to EventManager that allows for ordered event handling and registration
+            </summary>
+        </member>
+        <member name="E:Highway.Data.DataContext.PreSave">
+            <summary>
+            The event fired just before the commit of the ORM
+            </summary>
+        </member>
+        <member name="E:Highway.Data.DataContext.PostSave">
+            <summary>
+            The event fired just after the commit of the ORM
+            </summary>
+        </member>
+        <member name="T:Highway.Data.ObjectDataContext">
+            <summary>
+            The default implementation of a Object context for the database first approach to Entity Framework
+            </summary>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.#ctor(System.Data.EntityClient.EntityConnection)">
+            <summary>
+            Creates a database or model first context        /// </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.#ctor(System.String)">
+            <summary>
+            Creates a database or model first context
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.#ctor(System.String,System.String)">
+            <summary>
+            Creates a database or model first context
+            </summary>
+            <param name="connectionString"></param>
+            <param name="defaultContainerName"></param>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.#ctor(System.Data.EntityClient.EntityConnection,System.String)">
+            <summary>
+            Creates a database or model first context
+            </summary>
+            <param name="connection"></param>
+            <param name="defaultContainerName"></param>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.AsQueryable``1">
+            <summary>
+            This gives a mockable wrapper around the normal Set<typeparamref name="T"/> method that allows for testablity
+            </summary>
+            <typeparam name="T">The Entity being queried</typeparam>
+            <returns><see cref="T:System.Linq.IQueryable`1"/></returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Add``1(``0)">
+            <summary>
+            Adds the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being added</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to add</param>
+            <returns>The <typeparamref name="T"/> you added</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Remove``1(``0)">
+            <summary>
+            Removes the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being removed</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to remove</param>
+            <returns>The <typeparamref name="T"/> you removed</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Update``1(``0)">
+            <summary>
+            Updates the provided instance of <typeparamref name="T"/> in the data context
+            </summary>
+            <typeparam name="T">The Entity Type being updated</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to update</param>
+            <returns>The <typeparamref name="T"/> you updated</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Attach``1(``0)">
+            <summary>
+            Attaches the provided instance of <typeparamref name="T"/> to the data context
+            </summary>
+            <typeparam name="T">The Entity Type being attached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to attach</param>
+            <returns>The <typeparamref name="T"/> you attached</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Detach``1(``0)">
+            <summary>
+            Detaches the provided instance of <typeparamref name="T"/> from the data context
+            </summary>
+            <typeparam name="T">The Entity Type being detached</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to detach</param>
+            <returns>The <typeparamref name="T"/> you detached</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Reload``1(``0)">
+            <summary>
+            Reloads the provided instance of <typeparamref name="T"/> from the database
+            </summary>
+            <typeparam name="T">The Entity Type being reloaded</typeparam>
+            <param name="item">The <typeparamref name="T"/> you want to reload</param>
+            <returns>The <typeparamref name="T"/> you reloaded</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.Commit">
+            <summary>
+            Commits all currently tracked entity changes
+            </summary>
+            <returns>the number of rows affected</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.ExecuteSqlQuery``1(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and tries to map the returned datasets into an <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            The results should have the same column names as the Entity Type has properties
+            </summary>
+            <typeparam name="T">The Entity Type that the return should be mapped to</typeparam>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> from the query return</returns>
+        </member>
+        <member name="M:Highway.Data.ObjectDataContext.ExecuteSqlCommand(System.String,System.Data.Common.DbParameter[])">
+            <summary>
+            Executes a SQL command and returns the standard int return from the query
+            </summary>
+            <param name="sql">The Sql Statement</param>
+            <param name="dbParams">A List of Database Parameters for the Query</param>
+            <returns>The rows affected</returns>
+        </member>
+        <member name="P:Highway.Data.ObjectDataContext.EventManager">
+            <summary>
+            The reference to EventManager that allows for ordered event handling and registration
+            </summary>
+        </member>
+        <member name="E:Highway.Data.ObjectDataContext.PreSave">
+            <summary>
+            The event fired just before the commit of the ORM
+            </summary>
+        </member>
+        <member name="E:Highway.Data.ObjectDataContext.PostSave">
+            <summary>
+            The event fired just after the commit of the ORM
+            </summary>
+        </member>
+        <member name="T:Highway.Data.DropCreateInitializer`1">
+            <summary>
+            ****    FOR DEVELOPMENT USAGE ONLY              ****
+            ****    DO NOT PUT THIS IN PRODUCTION CODE      ****
+            This class will clear the existing connections to the database and drop the database
+            </summary>
+        </member>
+        <member name="M:Highway.Data.DropCreateInitializer`1.#ctor(System.Action{`0})">
+            <summary>
+            
+            </summary>
+            <param name="seedAction"></param>
+        </member>
+        <member name="T:Highway.Data.EntityFramework.LoggingTraceExtensions">
+            <summary>
+            Extension for context to handle output of large numbers of queries
+            </summary>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.LoggingTraceExtensions.OutputSQL(Highway.Data.Interfaces.IDataContext,Common.Logging.ILog,Highway.Data.Interfaces.IQueryBase[])">
+            <summary>
+            Compiles the Context to execution of a query and tracks the time spent
+            </summary>
+            <param name="context">the context to run the test against</param>
+            <param name="log">The log to output the information to</param>
+            <param name="queries">the list of queries to be output</param>
+            <exception cref="T:System.InvalidOperationException">If the compilation does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.LoggingTraceExtensions.OutputSQL(Highway.Data.Interfaces.IDataContext,Highway.Data.Interfaces.IQueryBase[])">
+            <summary>
+            Compiles the Context to execution of a query and tracks the time spent with a default console logger
+            </summary>
+            <param name="context">the context to run the test against</param>
+            <param name="queries">the list of queries to be output</param>
+            <exception cref="T:System.InvalidOperationException">If the compilation does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="T:Highway.Data.EntityFramework.PerformanceTracingExtensions">
+             <summary>
+            Extensions for testing and tracing performance of queries and context compilation
+             </summary>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.PerformanceTracingExtensions.RunPerformanceTest``1(Highway.Data.Interfaces.IQuery{``0},Highway.Data.Interfaces.IDataContext,System.Boolean,System.Int32)">
+            <summary>
+            Runs the given query against the context and tracks execution time with a default console out logger
+            </summary>
+            <param name="query">The query to be executed</param>
+            <param name="context">the context to run the test against</param>
+            <param name="firstTimeRun">Boolean flag to determine if the context compilation time will be ran outside of the query time for traing purpose </param>
+            <param name="maxAllowableMilliseconds">the maximum number of milliseconds the execution should take</param>
+            <typeparam name="T">The type being queried</typeparam>
+            <returns>a tuple of boolean ( executed under allowed max ) and IEnumberable{T} for the results of the query</returns>
+            <exception cref="T:System.InvalidOperationException">If the query execution does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.PerformanceTracingExtensions.RunPerformanceTest``1(Highway.Data.Interfaces.IQuery{``0},Highway.Data.Interfaces.IDataContext,Common.Logging.ILog,System.Boolean,System.Int32)">
+            <summary>
+            Runs the given query against the context and tracks execution time
+            </summary>
+            <param name="query">The query to be executed</param>
+            <param name="context">the context to run the test against</param>
+            <param name="log">The log to output the information to</param>
+            <param name="firstTimeRun">Boolean flag to determine if the context compilation time will be ran outside of the query time for traing purpose </param>
+            <param name="maxAllowableMilliseconds">the maximum number of milliseconds the execution should take</param>
+            <typeparam name="T">The type being queried</typeparam>
+            <returns>a tuple of boolean ( executed under allowed max ) and IEnumberable{T} for the results of the query</returns>
+            <exception cref="T:System.InvalidOperationException">If the query execution does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.PerformanceTracingExtensions.RunStartUpPerformanceTest``1(Highway.Data.Interfaces.IDataContext,Highway.Data.Interfaces.IQuery{``0},System.Int32)">
+            <summary>
+            Compiles the Context to execution of a query and tracks the time spent
+            </summary>
+            <param name="context">the context to run the test against</param>
+            <param name="query">The query to be executed</param>
+            <param name="log">The log to output the information to</param>
+            <param name="maxAllowableMilliseconds">the maximum number of milliseconds the execution should take</param>
+            <typeparam name="T">The type being queried</typeparam>
+            <exception cref="T:System.InvalidOperationException">If the compilation does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="M:Highway.Data.EntityFramework.PerformanceTracingExtensions.RunStartUpPerformanceTest``1(Highway.Data.Interfaces.IDataContext,Highway.Data.Interfaces.IQuery{``0},Common.Logging.ILog,System.Int32)">
+            <summary>
+            Compiles the Context to execution of a query and tracks the time spent
+            </summary>
+            <param name="context">the context to run the test against</param>
+            <param name="query">The query to be executed</param>
+            <param name="log">The log to output the information to</param>
+            <param name="maxAllowableMilliseconds">the maximum number of milliseconds the execution should take</param>
+            <typeparam name="T">The type being queried</typeparam>
+            <exception cref="T:System.InvalidOperationException">If the compilation does not meet the expected time, it will throw this error</exception>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationFactory.GetConfigurationFor``1">
+            <summary>
+            Resolves the configuration for the type from common service locator using named instances
+            </summary>
+            <typeparam name="T1">The aggregate root type that has been configured</typeparam>
+            <returns>The configuration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationFactory.GetConfigurationFor``2">
+            <summary>
+            Resolves the configuration for the type from common service locator using named instances
+            </summary>
+            <typeparam name="T1">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T2">One of the aggregate root types that has been configured</typeparam>
+            <returns>The configuration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationFactory.GetConfigurationFor``3">
+            <summary>
+            Resolves the configuration for the type from common service locator using named instances
+            </summary>
+            <typeparam name="T1">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T2">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T3">One of the aggregate root types that has been configured</typeparam>
+            <returns>The configuration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationFactory.GetConfigurationFor``4">
+            <summary>
+            Resolves the configuration for the type from common service locator using named instances
+            </summary>
+            <typeparam name="T1">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T2">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T3">One of the aggregate root types that has been configured</typeparam>
+            <typeparam name="T4">One of the aggregate root types that has been configured</typeparam>
+            <returns>The configuration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationKeyFactory.GenerateKey``1">
+            <summary>
+            Generates the key for lookup on registration of types for Aggregate root bounded contexts
+            </summary>
+            <typeparam name="T1">The aggregate root for the context</typeparam>
+            <returns>The key for named registration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationKeyFactory.GenerateKey``2">
+            <summary>
+            Generates the key for lookup on registration of types for Aggregate root bounded contexts
+            </summary>
+            <typeparam name="T1">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T2">One of the aggregate roots for the context </typeparam>
+            <returns>The key for named registration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationKeyFactory.GenerateKey``3">
+            <summary>
+            Generates the key for lookup on registration of types for Aggregate root bounded contexts
+            </summary>
+            <typeparam name="T1">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T2">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T3">One of the aggregate roots for the context</typeparam>
+            <returns>The key for named registration</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateConfigurationKeyFactory.GenerateKey``4">
+            <summary>
+            Generates the key for lookup on registration of types for Aggregate root bounded contexts
+            </summary>
+            <typeparam name="T1">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T2">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T3">One of the aggregate roots for the context</typeparam>
+            <typeparam name="T4">One of the aggregate roots for the context</typeparam>
+            <returns>The key for named registration</returns>
+        </member>
+        <member name="T:Highway.Data.AggregateContextFactory">
+            <summary>
+            Factory for creating aggregate root based bounded contexts
+            </summary>
+        </member>
+        <member name="M:Highway.Data.AggregateContextFactory.Create``1">
+            <summary>
+            Creates an AggregateContext that is bound by the Type configured for it
+            </summary>
+            <typeparam name="T1">The Type to configure the context for</typeparam>
+            <returns><seealso cref="T:Highway.Data.Interfaces.IDataContext"/>The IDataContext for usage</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateContextFactory.Create``2">
+            <summary>
+            Creates an AggregateContext that is bound by the Type configured for it
+            </summary>
+            <typeparam name="T1">The Type to configure the context for</typeparam>
+            <typeparam name="T2">The Type to configure the context for</typeparam>
+            <returns><seealso cref="T:Highway.Data.Interfaces.IDataContext"/>The IDataContext for usage</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateContextFactory.Create``3">
+            <summary>
+            Creates an AggregateContext that is bound by the Type configured for it
+            </summary>
+            <typeparam name="T1">The Type to configure the context for</typeparam>
+            <typeparam name="T2">The Type to configure the context for</typeparam>
+            <typeparam name="T3">The Type to configure the context for</typeparam>
+            <returns><seealso cref="T:Highway.Data.Interfaces.IDataContext"/>The IDataContext for usage</returns>
+        </member>
+        <member name="M:Highway.Data.AggregateContextFactory.Create``4">
+            <summary>
+            Creates an AggregateContext that is bound by the Type configured for it
+            </summary>
+            <typeparam name="T1">The Type to configure the context for</typeparam>
+            <typeparam name="T2">The Type to configure the context for</typeparam>
+            <typeparam name="T3">The Type to configure the context for</typeparam>
+            <typeparam name="T4">The Type to configure the context for</typeparam>
+            <returns><seealso cref="T:Highway.Data.Interfaces.IDataContext"/>The IDataContext for usage</returns>
+        </member>
+        <member name="T:Highway.Data.Interceptors.AuditableInterceptor">
+            <summary>
+            An interceptor that operates pre-save to add audit information to the records being committed that implement the <see cref="T:Highway.Data.Interfaces.IAuditableEntity"/> interface
+            </summary>
+        </member>
+        <member name="M:Highway.Data.Interceptors.AuditableInterceptor.#ctor(Highway.Data.Interfaces.IUserNameService,System.Int32)">
+            <summary>
+            Creates a interceptor for audit data attachment
+            </summary>
+            <param name="userNameService">Application Service that provides current user name</param>
+            <param name="priority">The order in the priority stack that the interceptor should operate on</param>
+        </member>
+        <member name="M:Highway.Data.Interceptors.AuditableInterceptor.Execute(Highway.Data.Interfaces.IDataContext,Highway.Data.Interceptors.Events.PreSaveEventArgs)">
+            <summary>
+            Executes the interceptor handle an event based on the event arguments
+            </summary>
+            <param name="context">The data context that raised the event</param>
+            <param name="eventArgs">The event arguments that were passed from the context</param>
+            <returns>An Interceptor Result</returns>
+        </member>
+        <member name="P:Highway.Data.Interceptors.AuditableInterceptor.Priority">
+            <summary>
+             The priority order that this interceptor has for ordered execution by the event manager
+            </summary>
+        </member>
+        <member name="T:Highway.Data.IMappingConfiguration">
+            <summary>
+            Implement this interface to pass the mappings in via constructor injection on the context.
+            </summary>
+        </member>
+        <member name="M:Highway.Data.IMappingConfiguration.ConfigureModelBuilder(System.Data.Entity.DbModelBuilder)">
+            <summary>
+            This method takes the modelBuilder from Entity Framework and wires in the mappings provided
+            </summary>
+            <param name="modelBuilder">The Database model builder used by Entity Framework to generate the model.</param>
+        </member>
+        <member name="T:Highway.Data.QueryObjects.Command">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Highway.Data.QueryObjects.QueryBase">
+            <summary>
+            The base query that allows for appending expressions, query extensions, and eventing
+            </summary>
+        </member>
+        <member name="F:Highway.Data.QueryObjects.QueryBase.ExpressionList">
+            <summary>
+            Holds the expressions to be appended
+            </summary>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.QueryBase.AddMethodExpression(System.String,System.Type[],System.Linq.Expressions.Expression[])">
+            <summary>
+            Adds a method to the expression in the query object
+            </summary>
+            <param name="methodName">The name of the method to be added i.e. GroupBy</param>
+            <param name="generics">Any type parameters needed by the method to be added</param>
+            <param name="parameters">Any object parameters needed by the method to be added</param>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.QueryBase.CheckContextAndQuery(System.Object)">
+            <summary>
+            Checks the context and the Query for null
+            </summary>
+            <param name="query">The query to be executed</param>
+        </member>
+        <member name="P:Highway.Data.QueryObjects.QueryBase.Context">
+            <summary>
+            The reference to the <see cref="T:Highway.Data.Interfaces.IDataContext"/> that gives data connection
+            </summary>
+        </member>
+        <member name="E:Highway.Data.QueryObjects.QueryBase.PreQuery">
+            <summary>
+            The event fired just before the query goes to the database
+            </summary>
+        </member>
+        <member name="E:Highway.Data.QueryObjects.QueryBase.PostQuery">
+            <summary>
+            The event fire just after the data is translated into objects but before the data is returned.
+            </summary>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Command.Execute(Highway.Data.Interfaces.IDataContext)">
+            <summary>
+            Executes the expression against the passed in context and ignores the returned value if any
+            </summary>
+            <param name="context">The data context that the command is executed against</param>
+        </member>
+        <member name="P:Highway.Data.QueryObjects.Command.ContextQuery">
+            <summary>
+            The Command that will be executed at some point in the future
+            </summary>
+        </member>
+        <member name="T:Highway.Data.QueryObjects.Query`1">
+            <summary>
+            The base implementation for Queries that return collections
+            </summary>
+            <typeparam name="T">The Type being requested</typeparam>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Query`1.Execute(Highway.Data.Interfaces.IDataContext)">
+            <summary>
+            This executes the expression in ContextQuery on the context that is passed in, resulting in a <see cref="T:System.Linq.IQueryable`1"/> that is returned as an <see cref="T:System.Collections.Generic.IEnumerable`1"/>
+            </summary>
+            <param name="context">the data context that the query should be executed against</param>
+            <returns><see cref="T:System.Collections.Generic.IEnumerable`1"/></returns>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Query`1.OutputSQLStatement(Highway.Data.Interfaces.IDataContext)">
+            <summary>
+            This executes the expression against the passed in context to generate the SQL statement, but doesn't execute the IQueryable<typeparamref name="T"/> against the data context
+            </summary>
+            <param name="context">The data context that the query is evaluated and the SQL is generated against</param>
+            <returns></returns>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Query`1.ExtendQuery">
+            <summary>
+            This method allows for the extension of Ordering and Grouping on the prebuild Query
+            </summary>
+            <returns>an <see cref="T:System.Linq.IQueryable`1"/></returns>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Query`1.AppendExpressions(System.Linq.IQueryable{`0})">
+            <summary>
+            Gives the ability to apend an <see cref="T:System.Linq.IQueryable"/> onto the current query
+            </summary>
+            <param name="query">The query containing the expressions to append</param>
+            <returns>The combined query</returns>
+        </member>
+        <member name="P:Highway.Data.QueryObjects.Query`1.ContextQuery">
+            <summary>
+            This holds the expression that will be used to create the <see cref="T:System.Linq.IQueryable`1"/> when executed on the context
+            </summary>
+        </member>
+        <member name="T:Highway.Data.QueryObjects.QueryExtensions">
+            <summary>
+            A collection of extension methods for extending reusable IQuery objects
+            </summary>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.QueryExtensions.Take``1(Highway.Data.Interfaces.IQuery{``0},System.Int32)">
+            <summary>
+            Takes the specified number of records
+            </summary>
+            <param name="extend"></param>
+            <param name="count"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.QueryExtensions.Skip``1(Highway.Data.Interfaces.IQuery{``0},System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="extend"></param>
+            <param name="count"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Highway.Data.QueryObjects.Scalar`1">
+            <summary>
+            Base implementation of a query that returns a single value or object
+            </summary>
+            <typeparam name="T">The type of object or value being returned</typeparam>
+        </member>
+        <member name="M:Highway.Data.QueryObjects.Scalar`1.Execute(Highway.Data.Interfaces.IDataContext)">
+            <summary>
+            Executes the expression against the passed in context
+            </summary>
+            <param name="context">The data context that the scalar query is executed against</param>
+            <returns>The instance of <typeparamref name="T"/> that the query materialized if any</returns>
+        </member>
+        <member name="P:Highway.Data.QueryObjects.Scalar`1.ContextQuery">
+            <summary>
+            The query to be executed later
+            </summary>
+        </member>
+    </members>
+</doc>
